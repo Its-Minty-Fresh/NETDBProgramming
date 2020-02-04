@@ -47,6 +47,7 @@ namespace NLogExample
             {
                 logger.Error(ex.Message);
             }
+            Console.ReadKey();
         }
     }
 }
