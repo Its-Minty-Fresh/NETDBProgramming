@@ -1,5 +1,7 @@
 ﻿using System;
 using NLog;
+using System.IO;
+using System.Collections.Generic;
 
 namespace NLogExample
 {
@@ -48,6 +50,115 @@ namespace NLogExample
                 logger.Error(ex.Message);
             }
             Console.ReadKey();
+            Console.ReadLine();
+
+            string movieFormat = "{0,-10}\t{1,-50}\t{2,-50}";
+            List<Movies> movies = LoadMovies();
+
+            foreach(Movies m in movies)
+            {
+                string title;
+                if(m.GetTitle().Length > 50)
+                {
+                    title = m.GetTitle().Remove(46) + "...";
+                }
+                else
+                {
+                    title = m.GetTitle();
+                }
+                Console.WriteLine(movieFormat, m.GetMovideID(), title, m.GetGenre());
+            }
+
+            Console.ReadLine();
+        }
+
+
+        static List<Movies> LoadMovies()
+        {
+            string file = "movies.csv";
+            List<Movies> movies = new List<Movies>();
+            if (File.Exists(file))
+            {
+                StreamReader movieReader = new StreamReader(file);
+                while (!movieReader.EndOfStream)
+                {
+                    string movieRow = movieReader.ReadLine();
+                    string[] movieAttributes = movieRow.Split(',');
+                    int movieID = Int32.Parse(movieAttributes[0]);
+                    string title = movieAttributes[1];
+                    string genre = movieAttributes[2];
+
+                    Movies movie = new Movies(movieID, title, genre);
+                    movies.Add(movie);
+                }
+                movieReader.Close();
+            }
+            return movies;
+        }
+
+        class Movies
+        {
+            private int MovieID { get; set; }
+            private string Title { get; set; }
+            private string Genre { get; set; }
+
+
+            public Movies()
+            {
+                this.MovieID = 0;
+                this.Title = "";
+                this.Genre = "";
+            }
+
+            public Movies(int movieID, string title, string genre)
+            {
+                this.MovieID = movieID;
+                this.Title = title;
+                this.Genre = genre;
+            }
+
+            public void SetMovieID(int movieID)
+            {
+                this.MovieID = movieID;
+            }
+
+            public int GetMovideID()
+            {
+                return this.MovieID;
+            }
+
+            public void SetTitle(string title)
+            {
+                this.Title = title;
+            }
+
+            public string GetTitle()
+            {
+                return this.Title;
+            }
+
+            public void SetGenre(string genre)
+            {
+                this.Genre = genre;
+            }
+
+            public string GetGenre()
+            {
+                return this.Genre;
+            }
+
+
+            public override string ToString()
+            {
+                string mv = this.MovieID.ToString();
+                mv = mv + ",";
+                mv = mv + this.Title;
+                mv = mv + ",";
+                mv = mv + this.Genre;
+
+                return mv;
+            }
+
         }
     }
 }
