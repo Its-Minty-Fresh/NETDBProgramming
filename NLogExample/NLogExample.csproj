@@ -51,6 +51,8 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="bin\Debug\movies - master.csv" />
+    <None Include="bin\Debug\movies.csv" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

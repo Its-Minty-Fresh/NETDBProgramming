@@ -1,7 +1,17 @@
-﻿using System;
+﻿/*
+Download initial movie data file
+Create movie Console Application to see all movies in the file and to add movies to the file Check for duplicate values!
+Implement Exception Handling
+Implement NLog framework
+*/
+
+
+
+using System;
 using NLog;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NLogExample
 {
@@ -9,6 +19,8 @@ namespace NLogExample
     {
         public static void Main(string[] args)
         {
+
+            /*
             // create NLog configuration
             var config = new NLog.Config.LoggingConfiguration();
 
@@ -50,28 +62,52 @@ namespace NLogExample
                 logger.Error(ex.Message);
             }
             Console.ReadKey();
-            Console.ReadLine();
+            */
+       
+            // Why is my program.cs not going to git?
 
-            string movieFormat = "{0,-10}\t{1,-50}\t{2,-50}";
             List<Movies> movies = LoadMovies();
 
-            foreach(Movies m in movies)
+            int selection = 0;
+            do
             {
-                string title;
-                if(m.GetTitle().Length > 50)
+                selection = MainMenu();
+                if (selection == 1)
                 {
-                    title = m.GetTitle().Remove(46) + "...";
+                    Console.Clear();
+                    movies = ViewMovies(movies);
                 }
-                else
+                if (selection == 2)
                 {
-                    title = m.GetTitle();
+                    Console.Clear();
+                    movies = CreateMovie(movies);
+                    SaveMovie(movies);
                 }
-                Console.WriteLine(movieFormat, m.GetMovideID(), title, m.GetGenre());
-            }
+            } while (selection != 5);
 
-            Console.ReadLine();
+
         }
 
+
+        static int MainMenu()
+        {
+            int selection = 0;
+
+            Console.WriteLine("    What would you like to do?\n\n" +
+                "    1) View Movies\n" +
+                "    2) Add Movies\n" +
+                "    5) Quit");
+
+            Console.Write("    ");
+            string resp = Console.ReadLine();
+            while (!Int32.TryParse(resp, out selection) || (selection < 0 || selection > 9))
+            {
+                Console.Write("    Please Enter a valid response 1 - 5 ");
+                resp = Console.ReadLine();
+            }
+            Console.Clear();
+            return selection;
+        }
 
         static List<Movies> LoadMovies()
         {
@@ -94,6 +130,78 @@ namespace NLogExample
                 movieReader.Close();
             }
             return movies;
+        }
+
+        static List<Movies> ViewMovies(List<Movies> movies)
+        {
+
+            string movieFormat = "{0,-10}\t{1,-50}\t{2,-50}";
+
+            foreach (Movies m in movies)
+            {
+                string title;
+                if (m.GetTitle().Length > 50)
+                {
+                    title = m.GetTitle().Remove(46) + "...";
+                }
+                else
+                {
+                    title = m.GetTitle();
+                }
+                Console.WriteLine(movieFormat, m.GetMovideID(), title, m.GetGenre());
+            }
+
+            Console.WriteLine("    Press any key to return to the main menu...");
+            Console.ReadLine();
+            Console.Clear();
+
+            return movies;
+        }
+
+
+        static List<Movies> CreateMovie(List<Movies> movie)
+        {
+            List<string> duplicateTitle = new List<string>();
+            foreach (Movies m in movie)
+            {
+                duplicateTitle.Add(m.GetTitle().ToUpper());
+            }
+
+
+            Console.WriteLine("    Please enter the Movie Title:");
+            string title = Console.ReadLine();
+
+
+            while(duplicateTitle.Contains(title.ToUpper()))
+            {
+                Console.WriteLine("    " + title + " Already exists in the database. Please enter a new movie!");
+                title = Console.ReadLine();
+            }
+
+            Console.WriteLine("    Please enter the Movie Genre:");
+            string genre = Console.ReadLine();
+
+            int ticketID = 0;
+            foreach (Movies m in movie)
+            {
+                ticketID = movie.Max(a => a.GetMovideID()) + 1;
+            }
+
+            Movies newMovie = new Movies(ticketID, title, genre);
+            movie.Add(newMovie);
+
+            return movie;
+        }
+
+        static void SaveMovie(List<Movies> movie)
+        {
+            StreamWriter newMovie = new StreamWriter("movies.csv");
+            foreach (Movies m in movie)
+            {
+                string mv = m.ToString();
+                newMovie.WriteLine(movie);
+            }
+            newMovie.Close();
         }
 
         class Movies
