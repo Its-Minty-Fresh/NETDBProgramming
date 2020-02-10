@@ -20,7 +20,6 @@ namespace NLogExample
         public static void Main(string[] args)
         {
 
-            /*
             // create NLog configuration
             var config = new NLog.Config.LoggingConfiguration();
 
@@ -37,34 +36,6 @@ namespace NLogExample
 
             // create instance of LogManager
             var logger = NLog.LogManager.GetCurrentClassLogger();
-
-            // log sample messages
-            logger.Trace("Sample trace message");
-            logger.Debug("Sample debug message");
-            logger.Info("Sample informational message");
-            logger.Warn("Sample warning message");
-            logger.Error("Sample error message");
-            logger.Fatal("Sample fatal error message");
-
-            // NLog supports structured messages
-            var fruit = new[] { "bananas", "apples", "pears" };
-            logger.Info("I like to eat {Fruit}", fruit);
-
-            // Example of logging an exception
-            try
-            {
-                int x = 10;
-                int y = 0;
-                Console.WriteLine(x / y);
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-            }
-            Console.ReadKey();
-            */
-       
-            // Why is my program.cs not going to git?
 
             List<Movies> movies = LoadMovies();
 
@@ -84,8 +55,6 @@ namespace NLogExample
                     SaveMovie(movies);
                 }
             } while (selection != 5);
-
-
         }
 
 
@@ -113,11 +82,14 @@ namespace NLogExample
         {
             string file = "movies.csv";
             List<Movies> movies = new List<Movies>();
+            
             if (File.Exists(file))
             {
                 StreamReader movieReader = new StreamReader(file);
+                string s = movieReader.ReadLine();
                 while (!movieReader.EndOfStream)
                 {
+                   
                     string movieRow = movieReader.ReadLine();
                     string[] movieAttributes = movieRow.Split(',');
                     int movieID = Int32.Parse(movieAttributes[0]);
@@ -190,6 +162,14 @@ namespace NLogExample
             Movies newMovie = new Movies(ticketID, title, genre);
             movie.Add(newMovie);
 
+            var logger = NLog.LogManager.GetCurrentClassLogger();
+            logger.Info("Movie ID {0}, Title {1}, Genere {2} added to the system", ticketID, title, genre);
+
+            Console.Clear();
+            Console.WriteLine("    Movie {0} was successfully added with the genere {1}", title, genre);
+            Console.WriteLine("    Press any key to return to the main menu...");
+            Console.ReadKey();
+
             return movie;
         }
 
@@ -199,7 +179,7 @@ namespace NLogExample
             foreach (Movies m in movie)
             {
                 string mv = m.ToString();
-                newMovie.WriteLine(movie);
+                newMovie.WriteLine(mv);
             }
             newMovie.Close();
         }
