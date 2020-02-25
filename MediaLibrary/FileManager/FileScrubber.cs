@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using MediaLibrary.Models;
 
-namespace MediaLibrary
+namespace MediaLibrary.FileManager
 {
     public static class FileScrubber
     {

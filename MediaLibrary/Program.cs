@@ -1,5 +1,8 @@
 ﻿using System;
 using NLog;
+using MediaLibrary.FileManager;
+using MediaLibrary.Models;
+using System.Collections.Generic;
 
 namespace MediaLibrary
 {
@@ -10,11 +13,23 @@ namespace MediaLibrary
 
         public static void Main(string[] args)
         {
+
+            Media media1 = new Movie();
+            Media media2 = new Book();
+            Media media3 = new Album();
+            media1.title = "asdasd";
+            ((Movie)media1).title = "Matt";
+            ((Movie)media1).genres = new List<string> { "Action" };
+
+            Media game1 = new Game();
+            ((Game)game1).title = "Matts Game";
+
             logger.Info("Program started");
 
-            string scrubbedFile = FileScrubber.ScrubMovies("../../movies.csv");
-            string albumFileName = "../../albums.csv";
-            string bookFileName = "../../books.csv";
+            string scrubbedFile = FileScrubber.ScrubMovies("../../Files/movies.csv");
+            string albumFileName = "../../Files/albums.csv";
+            string bookFileName = "../../Files/books.csv";
+
             MovieFile movieFile = new MovieFile(scrubbedFile);
             AlbumFile albumFile = new AlbumFile(albumFileName);
             BookFile bookFile = new BookFile(bookFileName);
@@ -22,6 +37,13 @@ namespace MediaLibrary
             string choice = "";
             do
             {
+                Console.WriteLine();
+                Console.WriteLine(media1);
+                Console.WriteLine(media2);
+                Console.WriteLine(media3);
+                media1.Display();
+                game1.Display();
+
                 // display choices to user
                 Console.WriteLine("1) Add Movie");
                 Console.WriteLine("2) Display All Movies");
@@ -84,10 +106,10 @@ namespace MediaLibrary
                 else if (choice == "2")
                 {
                     // Display All Movies
-                    foreach (Movie m in movieFile.Movies)
-                    {
-                        Console.WriteLine(m.Display());
-                    }
+                    //foreach (Movie m in movieFile.Movies)
+                    //{
+                    //    Console.WriteLine(m.Display());
+                    //}
                 }
                 else if (choice == "3")
                 {
@@ -139,10 +161,10 @@ namespace MediaLibrary
                 else if (choice == "4")
                 {
                     // Display All Albums
-                    foreach (Album a in albumFile.Albums)
-                    {
-                        Console.WriteLine(a.Display());
-                    }
+                    //foreach (Album a in albumFile.Albums)
+                    //{
+                    //    Console.WriteLine(a.Display());
+                    //}
                 }
                 else if (choice == "5")
                 {
@@ -198,10 +220,10 @@ namespace MediaLibrary
                 else if (choice == "6")
                 {
                     // Display All Books
-                    foreach (Book b in bookFile.Books)
-                    {
-                        Console.WriteLine(b.Display());
-                    }
+                    //foreach (Book b in bookFile.Books)
+                    //{
+                    //    Console.WriteLine(b.Display());
+                    //}
                 }
             } while (choice == "1" || choice == "2" || choice == "3" || choice == "4" || choice == "5" || choice == "6");
 

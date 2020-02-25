@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MediaLibrary.Models;
 
-namespace MediaLibrary
+namespace MediaLibrary.FileManager
 {
     public class BookFile
     {
